@@ -592,7 +592,9 @@ function layout_navbar_button_bar() {
 
 	# Allow plugins to modify the shortcut menu or add their own items
 	$t_modified_shortcut_items = event_signal( 'EVENT_MENU_SHORTCUT_FILTER', array( $t_shortcut_items ) );
-	if( is_array( $t_modified_shortcut_items ) && count( $t_modified_shortcut_items ) > 0) {
+	if( is_array( $t_modified_shortcut_items ) &&
+			count( $t_modified_shortcut_items ) > 0 &&
+			is_array( $t_modified_shortcut_items[0] ) ) {
 		$t_shortcut_items = $t_modified_shortcut_items[0];
 	}
 
@@ -601,8 +603,12 @@ function layout_navbar_button_bar() {
 		echo '<div class="btn-group btn-corner padding-right-8 padding-left-8">';
 
 		foreach( $t_shortcut_items as $t_item ) {
+			if( !isset( $t_item['icon'] ) ) {
+				$t_item['icon'] = 'fa-plug';
+			}
+
 			echo '<a class="btn btn-primary btn-sm" href="' . $t_item['url'] . '">';
-			echo '<i class="fa ' . $t_item['icon'] . '"></i> ' . lang_get( $t_item['title'] );
+			echo '<i class="fa ' . $t_item['icon'] . '"></i> ' . lang_get_defaulted( $t_item['title'] );
 			echo '</a>';
 		}
 
